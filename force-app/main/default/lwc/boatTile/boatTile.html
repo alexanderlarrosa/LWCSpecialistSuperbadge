@@ -1,0 +1,13 @@
+<template>
+    <div onclick={selectBoat} class={tileClass}>
+      <div style={backgroundStyle} class="tile"></div>
+      <div class="lower-third">
+        <!-- Boat information goes here -->
+        <h1>{boat.Name}</h1>
+        <h1>{boat.Contract__r.Name}</h1>
+        <h1>Price: {boat.Price__c}</h1>
+        <h1>Length: {boat.Length__c}</h1>
+      </div>
+    </div>
+  </template>
+  
