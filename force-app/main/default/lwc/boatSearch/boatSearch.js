@@ -1,7 +1,7 @@
 import { LightningElement } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 
-export default class BoatSearch extends LightningElement {
+export default class BoatSearch extends NavigationMixin(LightningElement)  {
 
     isLoading = false;
   

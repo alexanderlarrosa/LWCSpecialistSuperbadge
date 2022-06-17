@@ -1,17 +1,23 @@
 // import BOATMC from the message channel
-import { createMessageContext, releaseMessageContext, subscribe } from 'lightning/messageService';
 import BOATMC from '@salesforce/messageChannel/BoatMessageChannel__c';
+import { createMessageContext, releaseMessageContext, subscribe } from 'lightning/messageService';
+import { LightningElement, api, wire } from 'lwc';
 // Declare the const LONGITUDE_FIELD for the boat's Longitude__s
+const LONGITUDE_FIELD = 'Boat__c.Geolocation__Longitude__s';
 // Declare the const LATITUDE_FIELD for the boat's Latitude
+const LATITUDE_FIELD = 'Boat__c.Geolocation__Latitude__s';
 // Declare the const BOAT_FIELDS as a list of [LONGITUDE_FIELD, LATITUDE_FIELD];
+const BOAT_FIELDS = [LONGITUDE_FIELD, LATITUDE_FIELD];
+
+
 export default class BoatMap extends LightningElement {
   // private
   subscription = null;
-  boatId;
+  @api boatId;
 
   // Getter and Setter to allow for logic to run on recordId change
   // this getter must be public
-  get recordId() {
+  @api get recordId() {
     return this.boatId;
   }
   set recordId(value) {
