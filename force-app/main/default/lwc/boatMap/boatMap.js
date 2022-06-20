@@ -1,7 +1,8 @@
 // import BOATMC from the message channel
 import BOATMC from '@salesforce/messageChannel/BoatMessageChannel__c';
-import { createMessageContext, releaseMessageContext, subscribe } from 'lightning/messageService';
+import { APPLICATION_SCOPE, MessageContext,subscribe } from 'lightning/messageService';
 import { LightningElement, api, wire } from 'lwc';
+import { getRecord } from 'lightning/uiRecordApi';
 // Declare the const LONGITUDE_FIELD for the boat's Longitude__s
 const LONGITUDE_FIELD = 'Boat__c.Geolocation__Longitude__s';
 // Declare the const LATITUDE_FIELD for the boat's Latitude
@@ -32,6 +33,7 @@ export default class BoatMap extends LightningElement {
 
   // Getting record's location to construct map markers using recordId
   // Wire the getRecord method using ('$boatId')
+  @wire(getRecord, { recordId: '$boatId', fields: BOAT_FIELDS})
   wiredRecord({ error, data }) {
     // Error handling
     if (data) {
@@ -46,23 +48,30 @@ export default class BoatMap extends LightningElement {
     }
   }
 
+  @wire(MessageContext)
+  messageContext;
+
   // Subscribes to the message channel
   subscribeMC() {
-    // recordId is populated on Record Pages, and this component
-    // should not update when this component is on a record page.
-    if (this.subscription || this.recordId) {
-      return;
-    }
-    // Subscribe to the message channel to retrieve the recordId and explicitly assign it to boatId.
+    let subscription = subscribe(this.messageContext, BOATMC, (message) => { this.boatId = message.recordId }, { scope: APPLICATION_SCOPE });
   }
 
   // Calls subscribeMC()
   connectedCallback() {
+    if (this.subscription || thisr5.recordId) {
+      return;
+    }
     this.subscribeMC();
   }
 
+  handleMessage(message) {
+    this.boatId = message.recordId;
+  }
+
   // Creates the map markers array with the current boat's location for the map.
-  updateMap(Longitude, Latitude) {}
+  updateMap(Longitude, Latitude) {
+    this.mapMarkers = [Longitude,Latitude];
+  }
 
   // Getter method for displaying the map component, or a helper method.
   get showMap() {

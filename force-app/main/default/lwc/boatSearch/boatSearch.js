@@ -1,9 +1,9 @@
-import { LightningElement } from 'lwc';
+import { LightningElement, track } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 
 export default class BoatSearch extends NavigationMixin(LightningElement)  {
 
-    isLoading = false;
+    @track isLoading = false;
   
   // Handles loading event
   handleLoading() { 
