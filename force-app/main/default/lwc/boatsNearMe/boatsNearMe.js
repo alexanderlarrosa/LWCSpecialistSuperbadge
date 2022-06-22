@@ -33,6 +33,26 @@ export default class BoatsNearMe extends LightningElement {
         }
     }
 
+    renderedCallback() {
+        if (this.isRendered == false) {
+            this.getLocationFromBrowser();
+        }
+        this.isRendered = true;
+    }
+
+    getLocationFromBrowser() {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                this.latitude = position.coords.latitude;
+                this.longitude = position.coords.longitude;
+            },
+            (e) => {
+            }, {
+                enableHighAccuracy: true
+            }
+        );
+    }
+
     createMapMarkers(boatData) {
         this.mapMarkers = boatData.map(rowBoat => {
             return {
@@ -51,29 +71,6 @@ export default class BoatsNearMe extends LightningElement {
             title: LABEL_YOU_ARE_HERE,
             icon: ICON_STANDARD_USER
         });
-        this.isLoading = false;
-        }
-
-    getLocationFromBrowser() {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                this.latitude = position.coords.latitude;
-                this.longitude = position.coords.longitude;
-            },
-            (e) => {
-            }, {
-                enableHighAccuracy: true
-            }
-        );
+            this.isLoading = false;
     }
-
-    renderedCallback() {
-        if (this.isRendered == false) {
-            this.getLocationFromBrowser();
-        }
-        this.isRendered = true;
-    }
-
-
-
 }

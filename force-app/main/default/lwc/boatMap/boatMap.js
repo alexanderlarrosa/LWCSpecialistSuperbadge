@@ -58,7 +58,7 @@ export default class BoatMap extends LightningElement {
 
   // Calls subscribeMC()
   connectedCallback() {
-    if (this.subscription || thisr5.recordId) {
+    if (this.subscription || this.recordId) {
       return;
     }
     this.subscribeMC();
