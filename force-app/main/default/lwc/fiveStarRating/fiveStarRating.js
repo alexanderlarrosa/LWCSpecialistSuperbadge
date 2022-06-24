@@ -1,6 +1,6 @@
 //import fivestar static resource, call it fivestar
-import { LightningElement, api } from 'lwc';
 import fivestar from '@salesforce/resourceUrl/fivestar';
+import { LightningElement, api } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { loadStyle, loadScript } from 'lightning/platformResourceLoader';
 
@@ -12,19 +12,17 @@ const READ_ONLY_CLASS = 'readonly c-rating';
 
 export default class FiveStarRating extends LightningElement {
   //initialize public readOnly and value properties
-  @api readOnly;
-  @api value;
+  @api
+  readOnly;
+  @api
+  value;
 
   editedValue;
   isRendered;
 
   //getter function that returns the correct class depending on if it is readonly
-  starClass() {
-    if(this.readOnly){
-      return READ_ONLY_CLASS;
-    }else{
-      return EDITABLE_CLASS;
-    }
+  get starClass() {
+    return this.readOnly ? READ_ONLY_CLASS : EDITABLE_CLASS;
   }
 
   // Render callback to load the script once the component renders.
@@ -41,18 +39,18 @@ export default class FiveStarRating extends LightningElement {
   //display a toast with error message if there is an error loading script
   loadScript() {
     Promise.all([
-      loadStyle(this, fivestar + '/rating.css'),
-      loadScript(this, fivestar + '/rating.js')
+      loadScript(this, fivestar + '/rating.js'),
+      loadStyle(this, fivestar + '/rating.css')      
     ]).then(() => {
       this.initializeRating();
-    }).catch(()=>{
-      this.dispatchEvent(
-        new ShowToastEvent({
-            title: ERROR_TITLE,
-            message: error,
-            variant: ERROR_VARIANT
-        })
-    );
+    })
+    .catch(error => {
+      const toast = new ShowToastEvent({
+          title: ERROR_TITLE,
+          message: error.message,
+          variant: ERROR_VARIANT,
+      });
+      this.dispatchEvent(toast);
     });
   }
 
@@ -75,7 +73,12 @@ export default class FiveStarRating extends LightningElement {
 
   // Method to fire event called ratingchange with the following parameter:
   // {detail: { rating: CURRENT_RATING }}); when the user selects a rating
-  ratingChanged(rating) {
-    this.dispatchEvent(new CustomEvent('ratingchange', {detail: { rating: rating }}));
+  ratingChanged(rating) {     
+    const ratingchangeEvent = new CustomEvent('ratingchange', {
+      detail: {
+        rating: rating
+      }
+    });
+    this.dispatchEvent(ratingchangeEvent);    
   }
 }
